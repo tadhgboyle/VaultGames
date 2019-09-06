@@ -1,0 +1,10 @@
+name: VaultGames
+main: me.aberdeener.vaultgames.VaultGames
+authors: [Aberdeener]
+version: 1.0.0
+api-version: 1.14
+depend: [VaultCore]
+commands:
+   game:
+     usage: /game
+     description: The main command.

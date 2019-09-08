@@ -6,16 +6,15 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import me.aberdeener.vaultgames.API;
 import me.aberdeener.vaultgames.VaultGames;
 import me.aberdeener.vaultgames.commands.GameCommand;
 
@@ -64,7 +63,7 @@ public class TNTRun implements Listener {
 					}
 
 					// if a player drops below y15 make them dead
-					if (playerMove1.getY() < 15) {
+					if (playerMove1.getY() < 10) {
 						player.setGameMode(GameMode.SPECTATOR);
 						player.sendMessage(ChatColor.RED + "You died!");
 
@@ -88,40 +87,12 @@ public class TNTRun implements Listener {
 						}
 						// if less than 0, end game and teleport players to lobby
 						else {
+							
+							Player winner = player;
 
 							for (Player players : GameCommand.tntRunTotal.values()) {
 								players.setGameMode(GameMode.SPECTATOR);
-								players.sendMessage(ChatColor.translateAlternateColorCodes('&',
-										variable1 + player.getName() + string + " has won the game!"));
-								players.sendMessage(ChatColor.translateAlternateColorCodes('&',
-										string + "You will be teleported to the Lobby in 5 seconds..."));
-
-								// make scheduler to teleport players to lobby after 5 seconds + clear hashmaps
-								VaultGames.getInstance().getServer().getScheduler()
-										.scheduleSyncDelayedTask(VaultGames.getInstance(), new Runnable() {
-											public void run() {
-												players.teleport(Bukkit.getWorld("Lobby").getSpawnLocation());
-
-												GameCommand.tntRunTotal.clear();
-												GameCommand.tntRunRemaining.clear();
-
-												Bukkit.unloadWorld("tnt", false);
-
-												VaultGames.getInstance().getServer().getScheduler()
-														.scheduleSyncDelayedTask(VaultGames.getInstance(),
-																new Runnable() {
-																	public void run() {
-
-																		Bukkit.getServer()
-																				.createWorld(new WorldCreator("tnt"));
-																		playing = false;
-																		return;
-																	}
-																}, 20 * 5);
-
-											}
-										}, 20 * 5); // 20 (one second in ticks) * 5 (seconds to wait)
-							
+								API.GameEnding("TNTRun", players, winner, "tnt");
 							}
 						}
 					}
@@ -155,28 +126,8 @@ public class TNTRun implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onCommand(PlayerCommandPreprocessEvent event) {
-
-		Player player = (Player) event.getPlayer();
-
-		if (GameCommand.tntRunRemaining.containsKey(player.getUniqueId())) {
-			if (event.getMessage().equalsIgnoreCase("/tp") || (event.getMessage().equalsIgnoreCase("/hub") || (event
-					.getMessage().equalsIgnoreCase("/lobby")
-					|| (event.getMessage().equalsIgnoreCase("/warp") || (event.getMessage().equalsIgnoreCase("/sv")
-							|| (event.getMessage().equalsIgnoreCase("/cr")
-									|| (event.getMessage().equalsIgnoreCase("/tsv")))))))) {
-				player.sendMessage(
-						ChatColor.translateAlternateColorCodes('&', string + "You cannot teleport during the game."));
-				player.sendMessage(ChatColor.RED + "To leave the game: " + ChatColor.DARK_GREEN + "/game leave");
-				event.setCancelled(true);
-				return;
-			}
-		}
-	}
-
-	public static void queueRunnable() {
-
+	public static void TNTRunQueue() {
+		
 		String string = VaultGames.vcc.getString("string");
 		String variable1 = VaultGames.vcc.getString("variable-1");
 		String variable2 = VaultGames.vcc.getString("variable-2");

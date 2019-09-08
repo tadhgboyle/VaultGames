@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.aberdeener.vaultgames.commands.GameCommand;
+import me.aberdeener.vaultgames.games.SpeedPvP;
 import me.aberdeener.vaultgames.games.TNTRun;
 
 public class VaultGames extends JavaPlugin implements Listener {
@@ -46,14 +47,24 @@ public class VaultGames extends JavaPlugin implements Listener {
 		this.getCommand("game").setExecutor(new GameCommand());
 
 		TNTRunQueue();
+		SpeedPvPQueue();
 		
 		Bukkit.getWorld("tnt").setAutoSave(false);
+		Bukkit.getWorld("pvp").setAutoSave(false);
 	}
 
 	private void TNTRunQueue() {
 		this.getServer().getScheduler().runTaskTimer(VaultGames.getInstance(), new Runnable() {
 			public void run() {
-				TNTRun.queueRunnable();
+				TNTRun.TNTRunQueue();
+			}
+		}, 0, 20 * 10);
+	}
+	
+	private void SpeedPvPQueue() {
+		this.getServer().getScheduler().runTaskTimer(VaultGames.getInstance(), new Runnable() {
+			public void run() {
+				SpeedPvP.SpeedPvPQueue();
 			}
 		}, 0, 20 * 10);
 	}
@@ -66,8 +77,15 @@ public class VaultGames extends JavaPlugin implements Listener {
 		// listens for the main class
 		pm.registerEvents(this, this);
 
-		// Listens for mutechat class
+		// Listens for tntrun class
 		pm.registerEvents(new TNTRun(), this);
+		
+		// Listens for speed pvp class
+		pm.registerEvents(new SpeedPvP(), this);
+		
+		//Listens for generic events class
+		pm.registerEvents(new Events(), this);
+
 	}
 
 	// call data file from other class

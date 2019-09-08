@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.aberdeener.vaultgames.VaultGames;
+import me.aberdeener.vaultgames.games.SpeedPvP;
 import me.aberdeener.vaultgames.games.TNTRun;
 
 public class GameCommand implements CommandExecutor {
@@ -25,6 +26,8 @@ public class GameCommand implements CommandExecutor {
 
 	public static HashMap<UUID, Player> tntRunTotal = new HashMap<>();
 	public static HashMap<UUID, Player> tntRunRemaining = new HashMap<>();
+
+	public static HashMap<UUID, Player> SpeedPvPPlaying = new HashMap<>();
 
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 
@@ -64,8 +67,8 @@ public class GameCommand implements CommandExecutor {
 
 						if (args[1].equalsIgnoreCase("TNTRun")) {
 							if (TNTRun.playing == true) {
-								player.sendMessage(ChatColor.translateAlternateColorCodes('&',
-										string + "A game is already in progress, please try again later."));
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&', string + "A " + variable1
+										+ "TNTRun" + string + "game is already in progress, please try again later."));
 								return true;
 							}
 
@@ -73,6 +76,20 @@ public class GameCommand implements CommandExecutor {
 									+ "You have been added to the " + variable1 + "TNTRun" + string + " queue."));
 							tntRunTotal.put(player.getUniqueId(), player);
 							tntRunRemaining.put(player.getUniqueId(), player);
+							return true;
+						}
+
+						if (args[1].equalsIgnoreCase("SpeedPvP")) {
+							if (SpeedPvP.playing == true) {
+								player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+										string + "A " + variable1 + "SpeedPvP" + string
+												+ "game is already in progress, please try again later."));
+								return true;
+							}
+
+							player.sendMessage(ChatColor.translateAlternateColorCodes('&', string
+									+ "You have been added to the " + variable1 + "SpeedPvP" + string + " queue."));
+							SpeedPvPPlaying.put(player.getUniqueId(), player);
 							return true;
 						}
 
@@ -132,6 +149,29 @@ public class GameCommand implements CommandExecutor {
 								TNTRun.playing = false;
 								return true;
 							}
+							return true;
+						}
+
+						if (SpeedPvPPlaying.containsKey(player.getUniqueId())) {
+							player.teleport(Bukkit.getWorld("Lobby").getSpawnLocation());
+							player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+									string + "Teleporting you to the lobby..."));
+							SpeedPvPPlaying.remove(player.getUniqueId());
+
+							for (Player players : SpeedPvPPlaying.values()) {
+
+								players.sendMessage(
+										ChatColor.translateAlternateColorCodes('&', variable1 + player.getName()
+												+ string + " has " + ChatColor.RED + "left" + string + " the game."));
+								players.sendMessage(
+										ChatColor.translateAlternateColorCodes('&', string + "You have won the game!"));
+								players.sendMessage(ChatColor.translateAlternateColorCodes('&',
+										string + "You will be teleported to the Lobby in 5 seconds..."));
+								GameCommand.SpeedPvPPlaying.clear();
+								SpeedPvP.playing = false;
+								return true;
+							}
+
 							return true;
 						}
 

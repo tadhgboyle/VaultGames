@@ -1,5 +1,7 @@
 package me.aberdeener.vaultgames;
 
+import java.util.Collection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.WorldCreator;
@@ -15,18 +17,20 @@ public class API {
 	static String variable1 = VaultGames.vcc.getString("variable-1");
 	static String variable2 = VaultGames.vcc.getString("variable-2");
 
-
 	public static void GameStart(String gameClass, String gameMap) {
 		
+		Collection<Player> hashMap = null;
 		if (gameClass.equals("SpeedPvP")) {
 			SpeedPvP.playing = true;
+			hashMap = GameCommand.SpeedPvPPlaying.values();
 		}
 
 		if (gameClass.equals("TNTRun")) {
 			TNTRun.playing = true;
+			hashMap = GameCommand.tntRunTotal.values();
 		}
 		
-		for (Player players : GameCommand.SpeedPvPPlaying.values()) {
+		for (Player players : hashMap) {
 			players.sendMessage(
 					ChatColor.translateAlternateColorCodes('&', variable1 + gameClass + string
 							+ " is starting in " + variable1 + "10" + string + " seconds!"));
@@ -34,6 +38,8 @@ public class API {
 					.scheduleSyncDelayedTask(VaultGames.getInstance(), new Runnable() {
 						public void run() {
 							players.teleport(Bukkit.getWorld(gameMap).getSpawnLocation());
+							players.sendTitle(ChatColor.translateAlternateColorCodes('&', string + "Welcome to"),
+									(ChatColor.translateAlternateColorCodes('&', variable1 + gameClass)), 10, 70, 10);
 							return;
 						}
 					}, 20 * 10);

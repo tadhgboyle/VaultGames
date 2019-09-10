@@ -87,7 +87,7 @@ public class TNTRun implements Listener {
 						}
 						// if less than 0, end game and teleport players to lobby
 						else {
-							
+
 							Player winner = player;
 
 							for (Player players : GameCommand.tntRunTotal.values()) {
@@ -127,7 +127,7 @@ public class TNTRun implements Listener {
 	}
 
 	public static void TNTRunQueue() {
-		
+
 		String string = VaultGames.vcc.getString("string");
 		String variable1 = VaultGames.vcc.getString("variable-1");
 		String variable2 = VaultGames.vcc.getString("variable-2");
@@ -157,18 +157,7 @@ public class TNTRun implements Listener {
 							}
 
 							if (queued >= minPlayers) {
-								playing = true;
-								for (Player players : GameCommand.tntRunTotal.values()) {
-									players.sendMessage(ChatColor.translateAlternateColorCodes('&', variable1 + "TNTRun"
-											+ string + " is starting in " + variable1 + "10" + string + " seconds!"));
-									VaultGames.getInstance().getServer().getScheduler()
-											.scheduleSyncDelayedTask(VaultGames.getInstance(), new Runnable() {
-												public void run() {
-													players.teleport(Bukkit.getWorld("tnt").getSpawnLocation());
-													return;
-												}
-											}, 20 * 10);
-								}
+								API.GameStart("TNTRun", "tnt");
 							}
 						}
 					}

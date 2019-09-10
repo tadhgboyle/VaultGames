@@ -38,7 +38,6 @@ public class SpeedPvP implements Listener {
 					player.getInventory().addItem(new ItemStack(Material.MUSHROOM_STEW, 8));
 					player.getInventory().addItem(new ItemStack(Material.DIAMOND_SWORD, 1));
 					player.getInventory().addItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 4));
-
 					return;
 				}
 			}
@@ -56,12 +55,13 @@ public class SpeedPvP implements Listener {
 
 				GameCommand.SpeedPvPPlaying.remove(dead.getUniqueId());
 
+				dead.sendMessage(ChatColor.RED + "You died!");
+
+				// fix this asap: get only player in hashmap to be used as winner
+				Player winner = dead.getKiller();
+
 				for (Player players : Bukkit.getWorld("pvp").getPlayers()) {
 
-					Player winner = (Player) GameCommand.SpeedPvPPlaying.values();
-					
-					dead.sendMessage(ChatColor.RED + "You died!");
-					
 					API.GameEnding("SpeedPvP", players, winner, "pvp");
 				}
 			}

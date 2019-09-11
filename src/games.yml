@@ -1,2 +1,18 @@
-tntrun:
-  minPlayers: 3
+TNTRun:
+  minPlayers: 2
+SpeedPvP:
+  minPlayers: 2
+  spawn1: 
+    world: pvp
+    x: 52.0
+    y: 5.0
+    z: -48.0
+    pitch: 38.110287
+    yaw: 194.20645
+  spawn2: 
+    world: pvp
+    x: 43.0
+    y: 5.0
+    z: -48.0
+    pitch: 38.110287
+    yaw: 194.20645 

@@ -45,12 +45,12 @@ public class VaultGames extends JavaPlugin implements Listener {
 
 		// register commands and their classes
 		this.getCommand("game").setExecutor(new GameCommand());
+		this.getCommand("game").setTabCompleter(new TabCompletion());
 
 		TNTRunQueue();
 		SpeedPvPQueue();
 		
 		Bukkit.getWorld("tnt").setAutoSave(false);
-		Bukkit.getWorld("pvp").setAutoSave(false);
 	}
 
 	private void TNTRunQueue() {

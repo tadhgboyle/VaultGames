@@ -32,7 +32,7 @@ public class SpeedPvP implements Listener {
 
 		if (worldTo.getName().equalsIgnoreCase("pvp")) {
 			if (GameCommand.SpeedPvPPlaying.containsKey(player.getUniqueId())) {
-				if (playing == false) {
+				if (playing) {
 					player.sendTitle(ChatColor.translateAlternateColorCodes('&', string + "Welcome to"),
 							(ChatColor.translateAlternateColorCodes('&', variable1 + "Speed PvP")), 10, 70, 10);
 					player.getInventory().addItem(new ItemStack(Material.MUSHROOM_STEW, 8));
@@ -57,7 +57,6 @@ public class SpeedPvP implements Listener {
 
 				dead.sendMessage(ChatColor.RED + "You died!");
 
-				// fix this asap: get only player in hashmap to be used as winner
 				Player winner = dead.getKiller();
 
 				for (Player players : Bukkit.getWorld("pvp").getPlayers()) {
